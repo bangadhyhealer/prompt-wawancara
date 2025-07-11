@@ -171,6 +171,10 @@
         <option value="id">Bahasa Indonesia</option>
         <option value="en">English</option>
       </select>
+      <label>Karakter 1</label>
+      <input type="text" id="character1" placeholder="Contoh: pria berusia 40-an dengan janggut tipis" />
+      <label>Karakter 2</label>
+      <input type="text" id="character2" placeholder="Contoh: wanita muda dengan rambut pendek dan ekspresi tenang" />
       <label>Lokasi Wawancara</label>
       <input type="text" id="location" placeholder="Contoh: studio modern dengan lampu ambient" />
       <label>Jenis Kursi</label>
@@ -216,6 +220,7 @@
       const help = document.getElementById('helpPopup');
       help.style.display = help.style.display === 'block' ? 'none' : 'block';
     }
+
     function generatePrompt() {
       const lang = document.getElementById('language').value;
       const location = document.getElementById('location').value;
@@ -227,26 +232,34 @@
       const quote1 = document.getElementById('quote1').value;
       const quote2 = document.getElementById('quote2').value;
       const quote3 = document.getElementById('quote3').value;
+      const char1 = document.getElementById('character1').value;
+      const char2 = document.getElementById('character2').value;
+
       let prompt = "";
       if (lang === "id") {
-        prompt += `Sebuah adegan wawancara sinematik dengan satu narasumber. Narasumber duduk di atas ${chair} di ${location}. Ia mengenakan ${outfit}, berbicara langsung ke kamera dengan ekspresi dan gerakan tangan yang alami. Pencahayaan lembut dari ${lighting}. Mikrofon terpasang di bajunya. Latar belakang menunjukkan ${background}. Kamera ${camera}. Tampilan realistis, 4K berkualitas tinggi.
+        prompt += `Karakter 1: ${char1}
+Karakter 2: ${char2}
 
-`;
-        prompt += `Voiceover:
+Sebuah adegan wawancara sinematik dengan satu narasumber. Narasumber duduk di atas ${chair} di ${location}. Ia mengenakan ${outfit}, berbicara langsung ke kamera dengan ekspresi dan gerakan tangan yang alami. Pencahayaan lembut dari ${lighting}. Mikrofon terpasang di bajunya. Latar belakang menunjukkan ${background}. Kamera ${camera}. Tampilan realistis, 4K berkualitas tinggi.
+
+Voiceover:
 1. "${quote1}"
 2. "${quote2}"
 3. "${quote3}"`;
       } else {
-        prompt += `A cinematic interview scene featuring a single speaker. The person is seated on a ${chair} in ${location}. They are wearing ${outfit}, speaking directly to the camera with expressive hand gestures. Soft lighting from ${lighting}. A clip-on microphone is attached to their shirt. The background features ${background}. Camera style: ${camera}. Realistic look, 4K high quality.
+        prompt += `Character 1: ${char1}
+Character 2: ${char2}
 
-`;
-        prompt += `Voiceover:
+A cinematic interview scene featuring a single speaker. The person is seated on a ${chair} in ${location}. They are wearing ${outfit}, speaking directly to the camera with expressive hand gestures. Soft lighting from ${lighting}. A clip-on microphone is attached to their shirt. The background features ${background}. Camera style: ${camera}. Realistic look, 4K high quality.
+
+Voiceover:
 1. "${quote1}"
 2. "${quote2}"
 3. "${quote3}"`;
       }
       document.getElementById('prompt').textContent = prompt;
     }
+
     function generateAuto() {
       const lang = document.getElementById('language').value;
       document.getElementById('location').value = lang === "id" ? "studio modern dengan lampu ambient" : "modern studio with ambient lighting";
@@ -260,6 +273,7 @@
       document.getElementById('quote3').value = lang === "id" ? "Tugas kita adalah memastikan teknologi berpihak pada kemanusiaan." : "Our job is to ensure technology serves humanity.";
       generatePrompt();
     }
+
     function copyPrompt() {
       const text = document.getElementById("prompt").textContent;
       if (text.trim() !== "") {
@@ -268,11 +282,10 @@
         });
       }
     }
-  
-  function closeStartPopup() {
-    document.getElementById("startPopup").style.display = "none";
-  }
 
-</script>
+    function closeStartPopup() {
+      document.getElementById("startPopup").style.display = "none";
+    }
+  </script>
 </body>
 </html>
