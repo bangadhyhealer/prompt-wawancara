@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prompt Wawancara Veo 3</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0 15px;
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #222;
+    }
+    label {
+      margin-top: 15px;
+      font-weight: bold;
+      display: block;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    textarea { resize: vertical; }
+    .btn-group {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      color: white;
+    }
+    .generate { background-color: #3f8c3f; }
+    .auto { background-color: #2d76aa; }
+    .reset { background-color: #999; }
+    .copy { background-color: #444; margin-top: 10px; width: 100%; }
+    #prompt {
+      margin-top: 25px;
+      padding: 15px;
+      background-color: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+    #helpIcon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #3f8c3f;
+      color: white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 999;
+      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    }
+    #helpPopup, #popup {
+      display: none;
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      width: 90%;
+      max-width: 320px;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      z-index: 999;
+    }
+    #helpPopup h3, #popup h3 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+    #helpPopup ul {
+      padding-left: 20px;
+      font-size: 14px;
+    }
+    #helpPopup button, #popup button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #999;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .social-buttons {
+      margin-top: 10px;
+    }
+    .social-buttons a {
+      display: inline-block;
+      margin-right: 10px;
+      padding: 10px 14px;
+      background-color: #25D366;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .social-buttons a.tiktok {
+      background-color: #000;
+    }
+    @media screen and (max-width: 480px) {
+      .btn-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="startPopup" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+     background-color: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 99999;">
+  <div style="background: #fff; padding: 20px; max-width: 500px; border-radius: 10px; text-align: center;">
+    <h2 style="margin-bottom: 10px;">Satu Langkah Lagi...</h2>
+    <p style="margin-bottom: 10px;">Tunggu sebentar ya! Setelah ini kamu bisa langsung menggunakan toolnya!</p>
+    <iframe src="https://www.profitableratecpm.com/b2ikw28c6?key=f341bccbe07a2f02f1975dc2edaa90dd"
+            width="100%" height="100" style="border:none; margin: 10px 0;"></iframe>
+    <button onclick="closeStartPopup()" style="background: #3f8c3f; color: white; border: none; padding: 12px 20px;
+            border-radius: 8px; font-size: 16px; cursor: pointer;">Lanjutkan ke Tool</button>
+  </div>
+</div>
+
+  <div id="helpIcon" onclick="toggleHelp()" title="Panduan Pengisian">❓</div>
+  <div id="helpPopup">
+    <h3>Panduan Pengisian</h3>
+    <ul>
+      <li><strong>Lokasi Wawancara:</strong> Contoh: studio modern, taman, ruang tamu</li>
+      <li><strong>Jenis Kursi:</strong> Contoh: kursi kulit, bangku kayu</li>
+      <li><strong>Gaya Pakaian:</strong> Contoh: jas formal, batik, kaos santai</li>
+      <li><strong>Pencahayaan:</strong> Contoh: cahaya alami dari jendela, softbox kiri</li>
+      <li><strong>Latar Belakang:</strong> Contoh: rak buku blur, taman, tembok polos</li>
+      <li><strong>Gaya Kamera:</strong> Contoh: close-up statis, bergerak pelan dari tripod</li>
+      <li><strong>Kutipan Dialog:</strong> Kalimat-kalimat dari narasumber</li>
+    </ul>
+    <button onclick="toggleHelp()">Tutup</button>
+  </div>
+  <div class="container">
+    <h1>Generator Prompt Wawancara Veo 3</h1>
+    <form id="promptForm">
+      <label>Pilih Bahasa Output</label>
+      <select id="language">
+        <option value="id">Bahasa Indonesia</option>
+        <option value="en">English</option>
+      </select>
+      <label>Lokasi Wawancara</label>
+      <input type="text" id="location" placeholder="Contoh: studio modern dengan lampu ambient" />
+      <label>Jenis Kursi</label>
+      <input type="text" id="chair" placeholder="Contoh: kursi kulit hitam" />
+      <label>Gaya Pakaian Narasumber</label>
+      <input type="text" id="outfit" placeholder="Contoh: jas navy dan kemeja putih" />
+      <label>Pencahayaan</label>
+      <input type="text" id="lighting" placeholder="Contoh: cahaya alami dari sisi kiri" />
+      <label>Latar Belakang</label>
+      <input type="text" id="background" placeholder="Contoh: rak buku blur dengan cahaya hangat" />
+      <label>Gaya Kamera</label>
+      <input type="text" id="camera" placeholder="Contoh: bergerak perlahan dari tripod" />
+      <label>Kutipan Dialog 1</label>
+      <textarea id="quote1" rows="2" placeholder="Contoh: Kami percaya bahwa teknologi harus memperkuat manusia."></textarea>
+      <label>Kutipan Dialog 2</label>
+      <textarea id="quote2" rows="2" placeholder="Contoh: AI bukan pengganti, tapi alat bantu untuk keputusan lebih baik."></textarea>
+      <label>Kutipan Dialog 3</label>
+      <textarea id="quote3" rows="2" placeholder="Contoh: Tugas kita adalah memastikan teknologi berpihak pada kemanusiaan."></textarea>
+      <div class="btn-group">
+        <button type="button" class="generate" onclick="generatePrompt()">Buat Prompt</button>
+        <button type="button" class="auto" onclick="generateAuto()">Buat Otomatis</button>
+        <button type="reset" class="reset">Reset</button>
+      </div>
+    </form>
+    <div id="prompt"></div>
+    <button type="button" class="copy" onclick="copyPrompt()">Salin Prompt</button>
+  </div>
+  <div id="popup">
+    <h3>Prompt berhasil disalin!</h3>
+    <p>Jangan lupa komen dan follow ya.</p>
+    <p><strong>DONASI seikhlasnya</strong><br>
+       BNI: 1923545440<br>
+       DANA: 087703111465<br>(Jika link tidak bisa, hubungi saya.)
+    </p>
+    <div class="social-buttons">
+      <a href="https://wa.me/6281936034285" target="_blank">WhatsApp</a>
+      <a href="https://www.tiktok.com/@bang.adhyhealer" class="tiktok" target="_blank">TikTok</a>
+    </div>
+    <button onclick="document.getElementById('popup').style.display='none'">Tutup</button>
+  </div>
+  <script>
+    function toggleHelp() {
+      const help = document.getElementById('helpPopup');
+      help.style.display = help.style.display === 'block' ? 'none' : 'block';
+    }
+    function generatePrompt() {
+      const lang = document.getElementById('language').value;
+      const location = document.getElementById('location').value;
+      const chair = document.getElementById('chair').value;
+      const outfit = document.getElementById('outfit').value;
+      const lighting = document.getElementById('lighting').value;
+      const background = document.getElementById('background').value;
+      const camera = document.getElementById('camera').value;
+      const quote1 = document.getElementById('quote1').value;
+      const quote2 = document.getElementById('quote2').value;
+      const quote3 = document.getElementById('quote3').value;
+      let prompt = "";
+      if (lang === "id") {
+        prompt += `Sebuah adegan wawancara sinematik dengan satu narasumber. Narasumber duduk di atas ${chair} di ${location}. Ia mengenakan ${outfit}, berbicara langsung ke kamera dengan ekspresi dan gerakan tangan yang alami. Pencahayaan lembut dari ${lighting}. Mikrofon terpasang di bajunya. Latar belakang menunjukkan ${background}. Kamera ${camera}. Tampilan realistis, 4K berkualitas tinggi.
+
+`;
+        prompt += `Voiceover:
+1. "${quote1}"
+2. "${quote2}"
+3. "${quote3}"`;
+      } else {
+        prompt += `A cinematic interview scene featuring a single speaker. The person is seated on a ${chair} in ${location}. They are wearing ${outfit}, speaking directly to the camera with expressive hand gestures. Soft lighting from ${lighting}. A clip-on microphone is attached to their shirt. The background features ${background}. Camera style: ${camera}. Realistic look, 4K high quality.
+
+`;
+        prompt += `Voiceover:
+1. "${quote1}"
+2. "${quote2}"
+3. "${quote3}"`;
+      }
+      document.getElementById('prompt').textContent = prompt;
+    }
+    function generateAuto() {
+      const lang = document.getElementById('language').value;
+      document.getElementById('location').value = lang === "id" ? "studio modern dengan lampu ambient" : "modern studio with ambient lighting";
+      document.getElementById('chair').value = lang === "id" ? "kursi kulit hitam" : "black leather chair";
+      document.getElementById('outfit').value = lang === "id" ? "jas navy dan kemeja putih" : "navy blazer and white shirt";
+      document.getElementById('lighting').value = lang === "id" ? "cahaya alami dari sisi kiri" : "natural light from the left";
+      document.getElementById('background').value = lang === "id" ? "rak buku blur dengan cahaya hangat" : "blurred bookshelf with warm lights";
+      document.getElementById('camera').value = lang === "id" ? "bergerak perlahan dari tripod" : "slow push-in on tripod";
+      document.getElementById('quote1').value = lang === "id" ? "Kami percaya bahwa teknologi harus memperkuat manusia." : "We believe technology should empower humans.";
+      document.getElementById('quote2').value = lang === "id" ? "AI bukan pengganti, tapi alat bantu untuk keputusan lebih baik." : "AI is not a replacement, but a tool for better decisions.";
+      document.getElementById('quote3').value = lang === "id" ? "Tugas kita adalah memastikan teknologi berpihak pada kemanusiaan." : "Our job is to ensure technology serves humanity.";
+      generatePrompt();
+    }
+    function copyPrompt() {
+      const text = document.getElementById("prompt").textContent;
+      if (text.trim() !== "") {
+        navigator.clipboard.writeText(text).then(function() {
+          document.getElementById("popup").style.display = "block";
+        });
+      }
+    }
+  
+  function closeStartPopup() {
+    document.getElementById("startPopup").style.display = "none";
+  }
+
+</script>
+</body>
+</html>
